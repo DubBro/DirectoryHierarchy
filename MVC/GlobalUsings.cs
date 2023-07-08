@@ -1,0 +1,9 @@
+﻿global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.AspNetCore.Http.Extensions;
+global using Microsoft.Extensions.Options;
+global using System.Text;
+global using System.Web;
+global using Newtonsoft.Json;
+global using MVC.Services.Interfaces;
+global using MVC.Services;
+global using MVC.Models;

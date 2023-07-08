@@ -1,0 +1,11 @@
+﻿global using System.Net;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Metadata.Builders;
+global using DirectoryHierarchy.Repositories;
+global using DirectoryHierarchy.Repositories.Interfaces;
+global using DirectoryHierarchy.Data.Entities;
+global using DirectoryHierarchy.Models.DTOs;
+global using DirectoryHierarchy.Services;
+global using DirectoryHierarchy.Services.Interfaces;
+global using DirectoryHierarchy.Data;

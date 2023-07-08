@@ -1,0 +1,16 @@
+﻿@model MVC.Models.ViewModels.IndexViewModel;
+@{
+    ViewData["Title"] = "Index";
+}
+
+<head>
+    <title>@Model.Title</title>
+</head>
+
+<h2>Folder - @Model.Title</h2>
+
+@foreach (var subfolder in Model.SubFolders)
+{
+    <a href=@subfolder.Link>=@subfolder.Name</a>
+    <br>
+}
