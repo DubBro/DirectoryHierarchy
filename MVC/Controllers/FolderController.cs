@@ -11,7 +11,6 @@ namespace MVC.Controllers
             _folderService = folderService;
         }
 
-        [Route("")]
         public async Task<IActionResult> Index(string? path)
         {
             var data = await _folderService.GetFolderAsync(path);
@@ -23,14 +22,14 @@ namespace MVC.Controllers
 
             var sf = new List<SubFolderViewModel>();
 
-            if(data.Id == 0)
+            if (data.Id == 0)
             {
                 foreach (var subfolder in data.SubFolders)
                 {
                     sf.Add(new SubFolderViewModel()
                     {
                         Name = subfolder.Name,
-                        Link = new Uri($"{Request.GetDisplayUrl()}?path={HttpUtility.UrlEncode(subfolder.Name)}"),
+                        Link = new Uri($"{Request.GetEncodedUrl()}{HttpUtility.UrlEncode(subfolder.Name)}"),
                     });
                 }
             }
@@ -41,10 +40,9 @@ namespace MVC.Controllers
                     sf.Add(new SubFolderViewModel()
                     {
                         Name = subfolder.Name,
-                        Link = new Uri($"{Request.GetDisplayUrl()}/{HttpUtility.UrlEncode(subfolder.Name)}"),
+                        Link = new Uri($"{Request.GetEncodedUrl()}/{HttpUtility.UrlEncode(subfolder.Name)}"),
                     });
                 }
-
             }
 
             var vm = new IndexViewModel()
