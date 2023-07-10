@@ -29,7 +29,11 @@ namespace MVC
 
             app.UseAuthorization();
 
-            app.MapControllerRoute("default", "{controller=Folder}/{action=Index}/{id?}");
+            app.MapControllerRoute(
+                "default",
+                "{*path}",
+                new { controller = "Folder", action = "Index"});
+            
             app.MapControllers();
 
             app.Run();
