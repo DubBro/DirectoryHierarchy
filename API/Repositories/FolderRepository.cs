@@ -14,9 +14,9 @@
              return await _dbContext.Folders.Where(f => f.ParentId == null).Include(f => f.SubFolders).ToListAsync();
         }
 
-        public async Task<FolderEntity> GetFolderByNameAsync(string name, int? parentId = null)
+        public async Task<FolderEntity?> GetFolderByNameAsync(string name, int? parentId = null)
         {
-            return await _dbContext.Folders.Where(f => f.Name == name && f.ParentId == parentId).Include(f => f.SubFolders).SingleAsync();
+            return await _dbContext.Folders.Where(f => f.Name == name && f.ParentId == parentId).Include(f => f.SubFolders).SingleOrDefaultAsync();
         }
     }
 }

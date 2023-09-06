@@ -8,7 +8,7 @@
 
         public FolderEntity Parent { get; set; } = null!;
 
-        public int? ParentId { get; set; } = null!;
+        public int? ParentId { get; set; }
 
         public IEnumerable<FolderEntity> SubFolders { get; set; } = null!;
     }

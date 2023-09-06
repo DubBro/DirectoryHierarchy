@@ -13,91 +13,78 @@
 
         public async Task<FolderDTO> GetFolderAsync(string path)
         {
-            try
+            var folderNames = path.Trim(new[] { ' ', '/' }).Split("/");
+
+            var folder = await _folderRepository.GetFolderByNameAsync(folderNames[0]);
+
+            if (folder == null)
             {
-                var folderNames = path.Split("/");
+                throw new FolderNotFoundException($"Invalid Request. Folder `{folderNames[0]}` does not exist.");
+            }
 
-                var folder = await _folderRepository.GetFolderByNameAsync(folderNames[0]);
+            for (int i = 1; i < folderNames.Length; i++)
+            {
+                bool checksum = false;
 
-                for (int i = 1; i < folderNames.Length; i++)
+                foreach (var subfolder in folder!.SubFolders)
                 {
-                    bool checksum = false;
-
-                    foreach (var subfolder in folder.SubFolders)
+                    if (folderNames[i] == subfolder.Name)
                     {
-                        if (folderNames[i] == subfolder.Name)
-                        {
-                            folder = await _folderRepository.GetFolderByNameAsync(folderNames[i], folder.Id);
-                            checksum = true;
-                            break;
-                        }
-                    }
-
-                    if (!checksum)
-                    {
-                        throw new Exception("Invalid Request. Folder does not exist.");
+                        folder = await _folderRepository.GetFolderByNameAsync(folderNames[i], folder.Id);
+                        checksum = true;
+                        break;
                     }
                 }
 
-                _logger.LogInformation($"Folder with name '{folder.Name}' by path '{path}' was received.");
-
-                var subfolders = new List<FolderDTO>();
-
-                foreach (var subfolder in folder.SubFolders)
+                if (!checksum)
                 {
-                    subfolders.Add(new FolderDTO
-                    {
-                        Id = subfolder.Id,
-                        Name = subfolder.Name,
-                        ParentId = subfolder.ParentId,
-                    });
+                    throw new FolderNotFoundException($"Invalid Request. Folder `{folderNames[i]}` does not exist.");
                 }
-
-                return new FolderDTO
-                {
-                    Id = folder.Id,
-                    Name = folder.Name,
-                    ParentId = folder.ParentId,
-                    SubFolders = subfolders,
-                };
             }
-            catch (Exception ex)
+
+            _logger.LogInformation($"Folder with name '{folder!.Name}' by path '{path}' was received.");
+
+            var subfolders = new List<FolderDTO>();
+
+            foreach (var subfolder in folder.SubFolders)
             {
-                _logger.LogError(ex, $"An error occured while getting a folder by path '{path}'.");
+                subfolders.Add(new FolderDTO
+                {
+                    Id = subfolder.Id,
+                    Name = subfolder.Name,
+                    ParentId = subfolder.ParentId,
+                });
             }
 
-            return default!;
+            return new FolderDTO
+            {
+                Id = folder.Id,
+                Name = folder.Name,
+                ParentId = folder.ParentId,
+                SubFolders = subfolders,
+            };
         }
 
         public async Task<IEnumerable<FolderDTO>> GetRootFoldersAsync()
         {
-            try
+            var data = await _folderRepository.GetRootFoldersAsync();
+
+            _logger.LogInformation($"Root folders (count: {data.Count()}) were received.");
+
+            var result = new List<FolderDTO>();
+
+            foreach (var folder in data)
             {
-                var data = await _folderRepository.GetRootFoldersAsync();
-
-                _logger.LogInformation($"Root folders (count: {data.Count()}) were received.");
-
-                var result = new List<FolderDTO>();
-
-                foreach (var folder in data)
+                result.Add(new FolderDTO
                 {
-                    result.Add(new FolderDTO
-                    {
-                        Id = folder.Id,
-                        Name = folder.Name,
-                        ParentId = folder.ParentId,
-                        SubFolders = null!,
-                    });
-                }
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occured while getting root folders.");
+                    Id = folder.Id,
+                    Name = folder.Name,
+                    ParentId = folder.ParentId,
+                    SubFolders = null!,
+                });
             }
 
-            return default!;
+            return result;
         }
     }
 }

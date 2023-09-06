@@ -3,6 +3,6 @@
     public interface IFolderRepository
     {
         Task<IEnumerable<FolderEntity>> GetRootFoldersAsync();
-        Task<FolderEntity> GetFolderByNameAsync(string name, int? parentId = null);
+        Task<FolderEntity?> GetFolderByNameAsync(string name, int? parentId = null);
     }
 }

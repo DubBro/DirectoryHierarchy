@@ -9,7 +9,7 @@ namespace DirectoryHierarchy.Data
         {
         }
 
-        public DbSet<FolderEntity> Folders { get; set; }
+        public DbSet<FolderEntity> Folders { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
