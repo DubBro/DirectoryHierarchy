@@ -9,3 +9,4 @@ global using DirectoryHierarchy.Models.DTOs;
 global using DirectoryHierarchy.Services;
 global using DirectoryHierarchy.Services.Interfaces;
 global using DirectoryHierarchy.Data;
+global using DirectoryHierarchy.Exceptions;
