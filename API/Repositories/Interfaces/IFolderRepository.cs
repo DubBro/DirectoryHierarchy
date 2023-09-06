@@ -4,5 +4,6 @@
     {
         Task<IEnumerable<FolderEntity>> GetRootFoldersAsync();
         Task<FolderEntity?> GetFolderByNameAsync(string name, int? parentId = null);
+        Task<int> AddFolderAsync(FolderEntity folderEntity);
     }
 }
