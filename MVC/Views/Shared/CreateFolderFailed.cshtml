@@ -1,0 +1,16 @@
+﻿<html>
+<head>
+    <title>Failed!</title>
+</head>
+<body>
+    <div>
+        <h2>Folder "@ViewData["NewFolder"]" was not created. Try again.</h2>
+        <h4>Name must be unique, must not contain "/" and must not be empty. Maximum length of the name - 255 symbols.</h4>
+    </div>
+    <div>
+        <a href="@ViewData["Url"]/@ViewData["Path"]">Try again</a>
+        <br>
+        <a href=@ViewData["Url"]>To root folder</a>
+    </div>
+</body>
+</html>

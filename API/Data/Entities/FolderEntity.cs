@@ -10,6 +10,6 @@
 
         public int? ParentId { get; set; }
 
-        public IEnumerable<FolderEntity>? SubFolders { get; set; }
+        public IEnumerable<FolderEntity> SubFolders { get; set; } = new List<FolderEntity>();
     }
 }

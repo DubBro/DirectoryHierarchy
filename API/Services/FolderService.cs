@@ -41,7 +41,7 @@
             {
                 bool checksum = false;
 
-                foreach (var subfolder in folder!.SubFolders!)
+                foreach (var subfolder in folder!.SubFolders)
                 {
                     if (folderNames[i] == subfolder.Name)
                     {
@@ -61,7 +61,7 @@
 
             var subfolders = new List<FolderDTO>();
 
-            foreach (var subfolder in folder.SubFolders!)
+            foreach (var subfolder in folder.SubFolders)
             {
                 subfolders.Add(new FolderDTO
                 {
@@ -104,9 +104,9 @@
 
         public async Task<int> AddFolderAsync(FolderDTO folderDTO)
         {
-            ValidateFolderDTO(folderDTO);
+            await ValidateFolderDTO(folderDTO);
 
-            FolderEntity folderEntity = new FolderEntity()
+            FolderEntity folderEntity = new ()
             {
                 Name = folderDTO.Name,
                 ParentId = folderDTO.ParentId,
@@ -119,7 +119,7 @@
             return result;
         }
 
-        private void ValidateFolderDTO(FolderDTO folderDTO)
+        private async Task ValidateFolderDTO(FolderDTO folderDTO)
         {
             if (folderDTO == null)
             {
@@ -134,6 +134,11 @@
             if (folderDTO.ParentId <= 0)
             {
                 throw new ArgumentException(nameof(folderDTO.ParentId));
+            }
+
+            if (await _folderRepository.GetFolderByNameAsync(folderDTO.Name, folderDTO.ParentId) != null)
+            {
+                throw new ArgumentException(nameof(folderDTO.Name));
             }
         }
     }

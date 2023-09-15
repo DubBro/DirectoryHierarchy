@@ -2,6 +2,7 @@
 {
     public interface IFolderService
     {
-        public Task<Folder> GetFolderAsync(string? path);
+        Task<Folder> GetFolderAsync(string? path);
+        Task CreateFolderAsync(string? path, string folderName);
     }
 }

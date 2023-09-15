@@ -17,7 +17,7 @@
         {
             Folder result;
 
-            if (path == null)
+            if (string.IsNullOrEmpty(path))
             {
                 result = await _httpClient.SendAsync<Folder, string?>($"{_settings.Value.ApiUrl}", HttpMethod.Get, null);
             }
@@ -26,16 +26,43 @@
                 result = await _httpClient.SendAsync<Folder, string?>($"{_settings.Value.ApiUrl}/?path={path}", HttpMethod.Get, null);
             }
 
-            if (result != null)
+            if (result == null)
             {
-                _logger.LogInformation($"Folder '{result.Name}' with subfolders (count: {result.SubFolders.Count()}) was received.");
-            }
-            else
-            {
-                _logger.LogInformation($"Result is null.");
+                throw new FolderNotFoundException("Result is null.");
             }
 
-            return result!;
+            _logger.LogInformation($"Folder '{result.Name}' with subfolders (count: {result.SubFolders.Count()}) was received.");
+
+            return result;
+        }
+
+        public async Task CreateFolderAsync(string? path, string folderName)
+        {
+            if (string.IsNullOrEmpty(folderName) || folderName.Contains('/') || folderName.Length > 255)
+            {
+                throw new ArgumentException("Invalid folder's name.");
+            }
+
+            var currentFolder = await GetFolderAsync(path);
+
+            foreach (var subfolder in currentFolder.SubFolders)
+            {
+                if (folderName == subfolder.Name)
+                {
+                    throw new ArgumentException("Invalid folder's name.");
+                }
+            }
+
+            Folder folder = new () { Name = folderName, ParentId = currentFolder.Id == 0 ? null : currentFolder.Id };
+
+            var result = await _httpClient.SendAsync<int, Folder>($"{_settings.Value.ApiUrl}", HttpMethod.Post, folder);
+
+            if (result == 0)
+            {
+                throw new BussinessException("Error occurred while creating folder.");
+            }
+
+            _logger.LogInformation($"Folder '{folderName}' was created with id = {result}.");
         }
     }
 }

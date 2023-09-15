@@ -4,6 +4,6 @@
     {
         public string Title { get; set; } = null!;
 
-        public IEnumerable<SubFolderViewModel> SubFolders { get; set; } = null!;
+        public IEnumerable<SubFolderViewModel> SubFolders { get; set; } = new List<SubFolderViewModel>();
     }
 }
