@@ -1,4 +1,4 @@
-﻿namespace DirectoryHierarchy.Exceptions
+﻿namespace MVC.Exceptions
 {
     public class FolderNotFoundException : Exception
     {

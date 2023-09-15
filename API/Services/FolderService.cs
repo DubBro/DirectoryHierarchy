@@ -11,8 +11,23 @@
             _logger = logger;
         }
 
-        public async Task<FolderDTO> GetFolderAsync(string path)
+        public async Task<FolderDTO> GetFolderAsync(string? path)
         {
+            if (path == null)
+            {
+                var rootFolders = await GetRootFoldersAsync();
+
+                var result = new FolderDTO()
+                {
+                    Id = 0,
+                    Name = "Root",
+                    SubFolders = rootFolders,
+                    ParentId = null,
+                };
+
+                return result;
+            }
+
             var folderNames = path.Trim(new[] { ' ', '/' }).Split("/");
 
             var folder = await _folderRepository.GetFolderByNameAsync(folderNames[0]);
@@ -85,6 +100,46 @@
             }
 
             return result;
+        }
+
+        public async Task<int> AddFolderAsync(FolderDTO folderDTO)
+        {
+            await ValidateFolderDTO(folderDTO);
+
+            FolderEntity folderEntity = new ()
+            {
+                Name = folderDTO.Name,
+                ParentId = folderDTO.ParentId,
+            };
+
+            var result = await _folderRepository.AddFolderAsync(folderEntity);
+
+            _logger.LogInformation($"Folder `{folderDTO.Name}` with ID = {result} was added.");
+
+            return result;
+        }
+
+        private async Task ValidateFolderDTO(FolderDTO folderDTO)
+        {
+            if (folderDTO == null)
+            {
+                throw new ArgumentNullException(nameof(folderDTO));
+            }
+
+            if (string.IsNullOrEmpty(folderDTO.Name) || folderDTO.Name.Contains("/") || folderDTO.Name.Length > 255)
+            {
+                throw new ArgumentException(nameof(folderDTO.Name));
+            }
+
+            if (folderDTO.ParentId <= 0)
+            {
+                throw new ArgumentException(nameof(folderDTO.ParentId));
+            }
+
+            if (await _folderRepository.GetFolderByNameAsync(folderDTO.Name, folderDTO.ParentId) != null)
+            {
+                throw new ArgumentException(nameof(folderDTO.Name));
+            }
         }
     }
 }

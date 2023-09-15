@@ -19,27 +19,32 @@
         {
             try
             {
-                if (path == null)
-                {
-                    var rootFolders = await _folderService.GetRootFoldersAsync();
-
-                    var result = new FolderDTO()
-                    {
-                        Id = 0,
-                        Name = "Root",
-                        SubFolders = rootFolders,
-                        ParentId = null,
-                    };
-
-                    return Ok(result);
-                }
-                else
-                {
-                    var result = await _folderService.GetFolderAsync(path);
-                    return Ok(result);
-                }
+                var result = await _folderService.GetFolderAsync(path);
+                return Ok(result);
             }
             catch (FolderNotFoundException ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost]
+        [Route("")]
+        [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Add(FolderDTO folderDTO)
+        {
+            try
+            {
+                var result = await _folderService.AddFolderAsync(folderDTO);
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return BadRequest();

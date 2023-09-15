@@ -6,10 +6,10 @@
 
         public string Name { get; set; } = null!;
 
-        public FolderEntity Parent { get; set; } = null!;
+        public FolderEntity? Parent { get; set; }
 
         public int? ParentId { get; set; }
 
-        public IEnumerable<FolderEntity> SubFolders { get; set; } = null!;
+        public IEnumerable<FolderEntity> SubFolders { get; set; } = new List<FolderEntity>();
     }
 }

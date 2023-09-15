@@ -18,5 +18,12 @@
         {
             return await _dbContext.Folders.Where(f => f.Name == name && f.ParentId == parentId).Include(f => f.SubFolders).SingleOrDefaultAsync();
         }
+
+        public async Task<int> AddFolderAsync(FolderEntity folderEntity)
+        {
+            var result = await _dbContext.Folders.AddAsync(folderEntity);
+            await _dbContext.SaveChangesAsync();
+            return result.Entity.Id;
+        }
     }
 }

@@ -32,8 +32,8 @@ namespace MVC
             app.MapControllerRoute(
                 "default",
                 "{*path}",
-                new { controller = "Folder", action = "Index"});
-            
+                new { controller = "Folder", action = "Index" });
+
             app.MapControllers();
 
             app.Run();

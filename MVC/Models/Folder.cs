@@ -6,8 +6,8 @@
 
         public string Name { get; set; } = null!;
 
-        public int? ParentId { get; set; } = null!;
+        public int? ParentId { get; set; }
 
-        public IEnumerable<Folder> SubFolders { get; set; } = null!;
+        public IEnumerable<Folder> SubFolders { get; set; } = new List<Folder>();
     }
 }

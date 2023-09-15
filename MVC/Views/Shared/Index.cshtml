@@ -1,16 +1,29 @@
 ﻿@model MVC.Models.ViewModels.IndexViewModel;
-@{
-    ViewData["Title"] = "Index";
-}
 
+<html>
 <head>
     <title>@Model.Title</title>
 </head>
-
-<h2>Folder - @Model.Title</h2>
-
-@foreach (var subfolder in Model.SubFolders)
-{
-    <a href=@subfolder.Link>=@subfolder.Name</a>
+<body>
+    <div>
+        <h2>Folder - @Model.Title</h2>
+    </div>
+    <div>
+        @foreach (var subfolder in Model.SubFolders)
+        {
+            <a href=@subfolder.Link>@subfolder.Name</a>
+            <br>
+        }
+    </div>
     <br>
-}
+    <br>
+    <div>
+        <form asp-action="CreateFolder" asp-route-path="@ViewData["Path"]" method="post">
+            <label>New folder's name:</label>
+            <input type="text" name="folderName" />
+            <input type="submit" value="Create folder" />
+        </form>
+        <label>(Name must be unique, must not contain "/" and must not be empty. Maximum length of the name - 255 symbols)</label>
+    </div>
+</body>
+</html>

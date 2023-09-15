@@ -7,3 +7,4 @@ global using Newtonsoft.Json;
 global using MVC.Services.Interfaces;
 global using MVC.Services;
 global using MVC.Models;
+global using MVC.Exceptions;
